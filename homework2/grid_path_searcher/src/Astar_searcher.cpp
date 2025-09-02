@@ -319,7 +319,7 @@ void AstarPathFinder::AstarGraphSearch(Vector3d start_pt, Vector3d end_pt)
             */
             neighborPtr = neighborPtrSets[i]; // 获取邻居节点
             double gCost = currentPtr->gScore + edgeCostSets[i];
-            double fCost = gCost + getHeu(neighborPtrSets[i], endPtr);
+            double fCost = gCost + getHeu(neighborPtr, endPtr);
 
             if(neighborPtr-> id == 0){ //discover a new node, which is not in the closed set and open set
                 /*
@@ -332,8 +332,8 @@ void AstarPathFinder::AstarGraphSearch(Vector3d start_pt, Vector3d end_pt)
                 neighborPtr->gScore = gCost;        // 计算当前节点到邻居的代价
                 neighborPtr->fScore = fCost;        // fScore = gScore + h(n)
                 neighborPtr->cameFrom = currentPtr; // 设置父节点
-                neighborPtr->id = 1;
                 openSet.insert(make_pair(neighborPtr->fScore, neighborPtr));
+                neighborPtr->id = 1;
                 continue;
             }
             else if(neighborPtr-> id == 1){ //this node is in open set and need to judge if it needs to update, the "0" should be deleted when you are coding
@@ -385,11 +385,10 @@ vector<Vector3d> AstarPathFinder::getPath()
         int y =terminatePtr->index(1);
         int z =terminatePtr->index(2);
 
-        // 测试：③输出比较 terminatePtr 和 map 中的节点是否是同一个
-        GridNodePtr mapNodePtr = GridNodeMap[x][y][z];
+        // 测试：③输出比较 terminatePtr 和 GridNodeMap[x][y][z] 中的节点是否是同一个
         std::cout << "[TRACE] terminatePtr = " << terminatePtr
-                  << ", GridNodeMap = " << mapNodePtr
-                  << ", equal? " << (terminatePtr == mapNodePtr ? "✅ YES" : "❌ NO") << std::endl;
+                  << ", GridNodeMap = " << GridNodeMap[x][y][z]
+                  << ", equal? " << (terminatePtr == GridNodeMap[x][y][z] ? "✅ YES" : "❌ NO") << std::endl;
 
         path.push_back(GridNodeMap[x][y][z]->coord);
         terminatePtr = terminatePtr->cameFrom;
